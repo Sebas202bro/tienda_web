@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<h1 class="mb-3">Detalle de Venta #{{ venta_id }}</h1>
+
+<div class="card mt-4">
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table text-center">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% if detalles %}
+                        {% for d in detalles %}
+                        <tr>
+                            <td>{{ d.Nombre }}</td>
+                            <td>{{ d.Cantidad }}</td>
+                            <td>${{ d.Precio }}</td>
+                            <td>${{ d.Cantidad * d.Precio }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4">No hay detalles de esta venta</td>
+                        </tr>
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <hr>
+
+        <!-- 💰 TOTAL -->
+        <h4 class="text-end">
+            Total: ${{ total }}
+        </h4>
+
+    </div>
+</div>
+
+{% endblock %}

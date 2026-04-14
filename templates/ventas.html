@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<h1 class="mb-3">Ventas</h1>
+
+<!-- ❌ ERROR -->
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+{% endif %}
+
+<!-- 🛒 FORMULARIO -->
+<div class="card mb-4 shadow-sm">
+
+    <div class="card-body">
+
+        <form action="/agregar_carrito" method="POST" class="row g-3">
+
+            <!-- PRODUCTO -->
+            <div class="col-12 col-md-4">
+                <label>Producto</label>
+                <select name="id" id="productoSelect"
+                        class="form-control" required>
+                    <option value="">Seleccione producto</option>
+                    {% for p in productos %}
+                    <option value="{{ p.Id }}">
+                        {{ p.Nombre }} (Stock: {{ p.Stock }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- CANTIDAD -->
+            <div class="col-12 col-md-2">
+                <label>Cantidad</label>
+                <input type="number" name="cantidad"
+                       class="form-control"
+                       placeholder="0"
+                       min="1"
+                       required>
+            </div>
+
+            <!-- AUTO NOMBRE -->
+            <div class="col-12 col-md-3">
+                <label>Producto</label>
+                <input type="text" id="nombre"
+                       class="form-control"
+                       placeholder="Auto"
+                       readonly>
+            </div>
+
+            <!-- AUTO PRECIO -->
+            <div class="col-12 col-md-3">
+                <label>Precio</label>
+                <input type="text" id="precio"
+                       class="form-control"
+                       placeholder="Auto"
+                       readonly>
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary w-100">
+                    Agregar al carrito
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- 🧾 CARRITO -->
+<div class="card shadow-sm">
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table text-center align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% if carrito %}
+                        {% set total = 0 %}
+
+                        {% for item in carrito %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item.nombre }}</td>
+
+                            <!-- ➕ ➖ -->
+                            <td>
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+
+                                    <a href="/actualizar_carrito/{{ item.id }}/restar"
+                                       class="btn btn-danger btn-sm">
+                                        ➖
+                                    </a>
+
+                                    <span>{{ item.cantidad }}</span>
+
+                                    <a href="/actualizar_carrito/{{ item.id }}/sumar"
+                                       class="btn btn-success btn-sm">
+                                        ➕
+                                    </a>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                ${{ item.precio * item.cantidad }}
+                            </td>
+
+                            <td>
+                                <a href="/eliminar_carrito/{{ item.id }}"
+                                   class="btn btn-warning btn-sm w-100">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% set total = total + (item.precio * item.cantidad) %}
+                        {% endfor %}
+
+                    {% else %}
+                        <tr>
+                            <td colspan="5">
+                                Carrito vacío
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <hr>
+
+        <!-- 💰 TOTAL -->
+        <h4 class="text-end">
+            Total: ${{ total or 0 }}
+        </h4>
+
+        <!-- FINALIZAR -->
+        <a href="/guardar_venta"
+           class="btn btn-success w-100 mt-2">
+            Finalizar Venta
+        </a>
+
+    </div>
+</div>
+
+<!-- 🔥 AUTOCOMPLETE SEGURO -->
+<script>
+document.getElementById("productoSelect").addEventListener("change", function () {
+
+    let id = this.value;
+
+    if (!id) return;
+
+    fetch(`/obtener_producto/${id}`)
+        .then(res => {
+            if (!res.ok) throw new Error("Error servidor");
+            return res.json();
+        })
+        .then(data => {
+            document.getElementById("nombre").value = data.nombre || "";
+            document.getElementById("precio").value = data.precio || "";
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            document.getElementById("nombre").value = "";
+            document.getElementById("precio").value = "";
+        });
+
+});
+</script>
+
+{% endblock %}

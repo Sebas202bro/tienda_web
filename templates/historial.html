@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<h1 class="mb-4">Historial de Ventas</h1>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-hover text-center align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% if ventas %}
+                        {% for v in ventas %}
+                        <tr>
+                            <td>{{ v.Id }}</td>
+                            <td>{{ v.Fecha }}</td>
+                            <td><strong>${{ v.Total }}</strong></td>
+                            <td>
+                                <a href="/detalle/{{ v.Id }}"
+                                   class="btn btn-info btn-sm">
+                                    Ver
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4">
+                                No hay ventas registradas
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
