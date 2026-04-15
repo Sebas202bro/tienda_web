@@ -24,12 +24,11 @@
                     {% if ventas %}
                         {% for v in ventas %}
                         <tr>
-                            <td>{{ v.Id }}</td>
-                            <td>{{ v.Fecha }}</td>
-                            <td><strong>${{ v.Total }}</strong></td>
+                            <td>{{ v[0] }}</td>
+                            <td>{{ v[1] }}</td>
+                            <td><strong>${{ v[2] }}</strong></td>
                             <td>
-                                <a href="/detalle/{{ v.Id }}"
-                                   class="btn btn-info btn-sm">
+                                <a href="/detalle/{{ v[0] }}" class="btn btn-info btn-sm">
                                     Ver
                                 </a>
                             </td>

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistema Tienda</title>
 
-    <!-- 📱 RESPONSIVE -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- BOOTSTRAP -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- PWA -->
     <link rel="manifest" href="/static/manifest.json">
     <meta name="theme-color" content="#2c3e50">
-    <!-- ESTILOS -->
+
     <style>
         body {
             font-size: 14px;
@@ -31,56 +31,47 @@
         }
     </style>
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🛒 Tienda</a>
 
-        <a class="navbar-brand" href="/">🛒 Tienda</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <!-- HAMBURGUESA -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- MENU -->
-        <div class="collapse navbar-collapse" id="menu">
-
-            <div class="ms-auto mt-2 mt-lg-0">
-
-                <a href="/dashboard" class="btn btn-outline-light">Dashboard</a>
-                <a href="/" class="btn btn-outline-light">Inventario</a>
-                <a href="/ventas" class="btn btn-outline-light">Ventas</a>
-                <a href="/gastos" class="btn btn-outline-light">Gastos</a>
-                <a href="/historial" class="btn btn-outline-light">Historial</a>
-
-                <a href="/logout" class="btn btn-danger ms-lg-2">
-                    Salir
-                </a>
-
+            <div class="collapse navbar-collapse" id="menu">
+                <div class="ms-auto mt-2 mt-lg-0">
+                    <a href="/dashboard" class="btn btn-outline-light">Dashboard</a>
+                    <a href="/" class="btn btn-outline-light">Inventario</a>
+                    <a href="/ventas" class="btn btn-outline-light">Ventas</a>
+                    <a href="/gastos" class="btn btn-outline-light">Gastos</a>
+                    <a href="/historial" class="btn btn-outline-light">Historial</a>
+                    <a href="/logout" class="btn btn-danger ms-lg-2">Salir</a>
+                </div>
             </div>
-
         </div>
+    </nav>
 
+    <!-- CONTENIDO -->
+    <div class="container mt-3">
+        {% block contenido %}
+        {% endblock %}
     </div>
-</nav>
 
-<!-- CONTENIDO -->
-<div class="container mt-3">
-    {% block contenido %}
-    {% endblock %}
-</div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- BOOTSTRAP JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/static/sw.js");
-}
-</script>
+    <!-- Service Worker -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/static/sw.js")
+                .then(() => console.log("Service Worker registrado"))
+                .catch(error => console.log("Error registrando Service Worker:", error));
+        }
+    </script>
 
 </body>
 </html>

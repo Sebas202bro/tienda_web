@@ -1,7 +1,7 @@
 {
   "name": "Tienda de Víveres",
   "short_name": "Víveres",
-  "start_url": "/",
+  "start_url": "/login",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2c3e50",

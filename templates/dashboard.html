@@ -4,20 +4,19 @@
 
 <h1 class="mb-4">Dashboard</h1>
 
-<!-- 📅 FILTRO -->
-<div class="card mb-4">
+<!-- FILTRO -->
+<div class="card mb-4 shadow-sm">
     <div class="card-body">
-
         <form method="GET" class="row g-3">
 
             <div class="col-12 col-md-4">
-                <label>Fecha Inicio</label>
-                <input type="date" name="inicio" class="form-control" value="{{ fecha_inicio }}">
+                <label class="form-label">Fecha Inicio</label>
+                <input type="date" name="inicio" class="form-control" value="{{ fecha_inicio or '' }}">
             </div>
 
             <div class="col-12 col-md-4">
-                <label>Fecha Fin</label>
-                <input type="date" name="fin" class="form-control" value="{{ fecha_fin }}">
+                <label class="form-label">Fecha Fin</label>
+                <input type="date" name="fin" class="form-control" value="{{ fecha_fin or '' }}">
             </div>
 
             <div class="col-12 col-md-4 d-flex align-items-end">
@@ -25,15 +24,14 @@
             </div>
 
         </form>
-
     </div>
 </div>
 
-<!-- 🔢 MÉTRICAS -->
+<!-- MÉTRICAS -->
 <div class="row text-center">
 
     <div class="col-12 col-md-3">
-        <div class="card bg-success text-white mb-3">
+        <div class="card bg-success text-white mb-3 shadow-sm">
             <div class="card-body">
                 <h6>Total Ventas</h6>
                 <h4>${{ total_ventas or 0 }}</h4>
@@ -42,7 +40,7 @@
     </div>
 
     <div class="col-12 col-md-3">
-        <div class="card bg-primary text-white mb-3">
+        <div class="card bg-primary text-white mb-3 shadow-sm">
             <div class="card-body">
                 <h6>N° Ventas</h6>
                 <h4>{{ num_ventas or 0 }}</h4>
@@ -51,7 +49,7 @@
     </div>
 
     <div class="col-12 col-md-3">
-        <div class="card bg-warning text-dark mb-3">
+        <div class="card bg-warning text-dark mb-3 shadow-sm">
             <div class="card-body">
                 <h6>Productos Vendidos</h6>
                 <h4>{{ productos_vendidos or 0 }}</h4>
@@ -60,7 +58,7 @@
     </div>
 
     <div class="col-12 col-md-3">
-        <div class="card bg-dark text-white mb-3">
+        <div class="card bg-dark text-white mb-3 shadow-sm">
             <div class="card-body">
                 <h6>Ganancia Total</h6>
                 <h4>${{ ganancia_total or 0 }}</h4>
@@ -69,7 +67,7 @@
     </div>
 
     <div class="col-12 col-md-3">
-        <div class="card bg-danger text-white mb-3">
+        <div class="card bg-danger text-white mb-3 shadow-sm">
             <div class="card-body">
                 <h6>Gastos</h6>
                 <h4>${{ total_gastos or 0 }}</h4>
@@ -78,7 +76,7 @@
     </div>
 
     <div class="col-12 col-md-3">
-        <div class="card bg-success text-white mb-3">
+        <div class="card bg-success text-white mb-3 shadow-sm">
             <div class="card-body">
                 <h6>Ganancia Neta</h6>
                 <h4>${{ ganancia_neta or 0 }}</h4>
@@ -88,23 +86,22 @@
 
 </div>
 
-<!-- 📈 GRÁFICA -->
-<div class="card mb-4">
+<!-- GRÁFICA -->
+<div class="card mb-4 shadow-sm">
     <div class="card-header">Ganancias por Día</div>
     <div class="card-body">
         <canvas id="grafico"></canvas>
     </div>
 </div>
 
-<!-- 🔥 PRODUCTOS MÁS RENTABLES -->
-<div class="card">
+<!-- PRODUCTOS MÁS RENTABLES -->
+<div class="card shadow-sm">
     <div class="card-header">Productos Más Rentables</div>
     <div class="card-body">
 
         <div class="table-responsive">
-            <table class="table text-center">
-
-                <thead>
+            <table class="table text-center align-middle">
+                <thead class="table-dark">
                     <tr>
                         <th>Producto</th>
                         <th>Ganancia</th>
@@ -112,26 +109,30 @@
                 </thead>
 
                 <tbody>
-                    {% for p in productos_top %}
-                    <tr>
-                        <td>{{ p[0] }}</td>
-                        <td>${{ p[1] }}</td>
-                    </tr>
-                    {% endfor %}
+                    {% if productos_top %}
+                        {% for p in productos_top %}
+                        <tr>
+                            <td>{{ p[0] }}</td>
+                            <td>${{ p[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="2">No hay datos para mostrar</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
-
             </table>
         </div>
 
     </div>
 </div>
 
-<!-- 📊 CHART FIX (100% SEGURO) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-const fechas = JSON.parse('{{ fechas | tojson | safe }}');
-const totales = JSON.parse('{{ totales | tojson | safe }}');
+const fechas = JSON.parse('{{ (fechas or []) | tojson | safe }}');
+const totales = JSON.parse('{{ (totales or []) | tojson | safe }}');
 
 const canvas = document.getElementById('grafico');
 
@@ -139,22 +140,14 @@ if (canvas) {
     new Chart(canvas, {
         type: 'line',
         data: {
-            labels: fechas || [],
+            labels: fechas,
             datasets: [{
                 label: 'Ganancias',
-                data: totales || [],
+                data: totales,
                 borderWidth: 2,
                 tension: 0.4,
                 fill: true
             }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            }
         }
     });
 }

@@ -4,7 +4,7 @@
 
 <h1 class="mb-4">Editar Producto</h1>
 
-<div class="card shadow">
+<div class="card shadow-sm">
 
     <div class="card-header bg-warning text-dark">
         ✏️ Editar Producto
@@ -12,33 +12,33 @@
 
     <div class="card-body">
 
-        <form action="/actualizar/{{ producto.Id }}" method="POST" class="row g-3">
+        <form action="/actualizar/{{ producto[0] }}" method="POST" class="row g-3">
 
             <div class="col-12 col-md-6">
-                <label>Nombre</label>
+                <label class="form-label">Nombre</label>
                 <input type="text" name="nombre"
-                       value="{{ producto.Nombre }}"
+                       value="{{ producto[1] }}"
                        class="form-control" required>
             </div>
 
             <div class="col-6 col-md-2">
-                <label>Compra</label>
+                <label class="form-label">Compra</label>
                 <input type="number" step="0.01" name="precio_compra"
-                       value="{{ producto.PrecioCompra }}"
+                       value="{{ producto[3] }}"
                        class="form-control" required>
             </div>
 
             <div class="col-6 col-md-2">
-                <label>Venta</label>
+                <label class="form-label">Venta</label>
                 <input type="number" step="0.01" name="precio_venta"
-                       value="{{ producto.PrecioVenta }}"
+                       value="{{ producto[4] }}"
                        class="form-control" required>
             </div>
 
             <div class="col-12 col-md-2">
-                <label>Stock</label>
+                <label class="form-label">Stock</label>
                 <input type="number" name="stock"
-                       value="{{ producto.Stock }}"
+                       value="{{ producto[5] }}"
                        class="form-control" required>
             </div>
 

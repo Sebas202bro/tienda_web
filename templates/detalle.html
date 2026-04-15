@@ -4,11 +4,11 @@
 
 <h1 class="mb-3">Detalle de Venta #{{ venta_id }}</h1>
 
-<div class="card mt-4">
+<div class="card mt-4 shadow-sm">
     <div class="card-body">
 
         <div class="table-responsive">
-            <table class="table text-center">
+            <table class="table table-hover text-center align-middle">
 
                 <thead class="table-dark">
                     <tr>
@@ -24,10 +24,10 @@
                     {% if detalles %}
                         {% for d in detalles %}
                         <tr>
-                            <td>{{ d.Nombre }}</td>
-                            <td>{{ d.Cantidad }}</td>
-                            <td>${{ d.Precio }}</td>
-                            <td>${{ d.Cantidad * d.Precio }}</td>
+                            <td>{{ d[0] }}</td>
+                            <td>{{ d[1] }}</td>
+                            <td>${{ d[2] }}</td>
+                            <td>${{ d[1] * d[2] }}</td>
                         </tr>
                         {% endfor %}
                     {% else %}
@@ -43,7 +43,6 @@
 
         <hr>
 
-        <!-- 💰 TOTAL -->
         <h4 class="text-end">
             Total: ${{ total }}
         </h4>
