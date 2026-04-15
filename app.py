@@ -43,6 +43,7 @@ def proteger():
     if request.endpoint not in rutas_libres and 'usuario' not in session:
         return redirect('/login')
 
+
 # ---------------- INVENTARIO ----------------
 @app.route('/')
 def index():
@@ -60,6 +61,7 @@ def index():
     conn.close()
 
     return render_template('index.html', productos=productos, busqueda=busqueda)
+
 
 # ---------------- CRUD ----------------
 @app.route('/agregar', methods=['POST'])
@@ -126,6 +128,7 @@ def actualizar(id):
     conn.commit()
     conn.close()
     return redirect('/')
+
 
 # ---------------- DASHBOARD ----------------
 @app.route('/dashboard')
@@ -194,6 +197,7 @@ def dashboard():
         productos_top=productos_top
     )
 
+
 # ---------------- VENTAS ----------------
 @app.route('/ventas')
 def ventas():
@@ -221,8 +225,8 @@ def obtener_producto(id):
     conn.close()
 
     return jsonify({
-        "nombre": p[0],
-        "precio": float(p[1])
+        "nombre": p["Nombre"],
+        "precio": float(p["PrecioVenta"])
     })
 
 
@@ -248,8 +252,8 @@ def agregar_carrito():
     else:
         carrito.append({
             "id": id,
-            "nombre": p.Nombre,
-            "precio": p.PrecioVenta,
+            "nombre": p["Nombre"],
+            "precio": p["PrecioVenta"],
             "cantidad": cantidad
         })
 
@@ -268,6 +272,7 @@ def eliminar_carrito(index):
     return redirect('/ventas')
 
 
+# ---------------- GUARDAR VENTA ----------------
 @app.route('/guardar_venta')
 def guardar_venta():
     carrito = session.get('carrito', [])
@@ -301,6 +306,7 @@ def guardar_venta():
     session['carrito'] = []
     return redirect('/ventas')
 
+
 # ---------------- GASTOS ----------------
 @app.route('/gastos')
 def gastos():
@@ -323,15 +329,18 @@ def agregar_gasto():
     conn = conectar()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "INSERT INTO Gastos (Descripcion, Monto) VALUES (?, ?)",
-        (request.form['descripcion'], request.form['monto'])
-    )
+    cursor.execute("""
+        INSERT INTO Gastos (Descripcion, Monto)
+        VALUES (?, ?)
+    """, (
+        request.form['descripcion'],
+        request.form['monto']
+    ))
 
     conn.commit()
     conn.close()
-
     return redirect('/gastos')
+
 
 # ---------------- HISTORIAL ----------------
 @app.route('/historial')
@@ -366,5 +375,6 @@ def detalle(id):
     return render_template("detalle.html", detalles=detalles, venta_id=id, total=total)
 
 
+# ---------------- RUN ----------------
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run()
