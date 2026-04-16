@@ -5,6 +5,54 @@ app = Flask(__name__)
 app.secret_key = "secreto"
 app.config['SESSION_PERMANENT'] = False
 
+from database.conexion import conectar
+
+def init_db():
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Productos (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Nombre TEXT,
+        PrecioCompra REAL,
+        PrecioVenta REAL,
+        Stock INTEGER
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Ventas (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        Total REAL
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS DetalleVenta (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        VentaId INTEGER,
+        ProductoId INTEGER,
+        Cantidad INTEGER,
+        Precio REAL
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Gastos (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Descripcion TEXT,
+        Monto REAL,
+        Fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
+
 USUARIO = "admin"
 PASSWORD = "1234"
 
